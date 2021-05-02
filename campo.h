@@ -3,13 +3,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "lista.h"
+#include "fila.h"
 
 typedef struct
 {
     char **matriz;
     int lin;
     int col;
+
+    Queue* jogando;
+    //Queue* vizinhos;
 }Campo;
 
 Campo montaCampo(int lin, int col);

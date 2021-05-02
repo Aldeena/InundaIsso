@@ -1,5 +1,5 @@
 #include "campo.h"
-#include "lista.h"
+#include "fila.h"
 
 Campo montaCampo(int lin, int col)
 {
@@ -25,6 +25,8 @@ Campo montaCampo(int lin, int col)
                 c.matriz[i][j] = rand()%6;
         }
     }
+
+    c.jogando = create_queue();
     return c;
 }
 
