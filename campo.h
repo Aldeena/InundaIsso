@@ -3,10 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "lista.h"
 
 typedef struct
 {
-    int **matriz;
+    char **matriz;
     int lin;
     int col;
 }Campo;

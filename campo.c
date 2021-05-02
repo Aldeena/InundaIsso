@@ -1,4 +1,5 @@
 #include "campo.h"
+#include "lista.h"
 
 Campo montaCampo(int lin, int col)
 {
@@ -14,7 +15,14 @@ Campo montaCampo(int lin, int col)
     {
         for(int j = 0; j < col; j++)
         {
-            c.matriz[i][j] = rand()%6;
+            if(i == 0)
+                c.matriz[i][j] = 8;
+            else if(j == 0)
+                c.matriz[i][j] = 8;
+            else if(j == c.col-1 || i == c.lin-1)
+                c.matriz[i][j] = 8;
+            else
+                c.matriz[i][j] = rand()%6;
         }
     }
     return c;
@@ -26,7 +34,14 @@ void imprimeCampo(Campo c)
     {
         for(int j = 0; j < c.col; j++)
         {
-            printf("%d ", c.matriz[i][j]);
+            if(j == c.col-1 || i == c.lin-1)
+                printf(" ");
+            else if(i == 0)
+                printf("%d ", j);
+            else if(j == 0)
+                printf("%d ", i);
+            else
+                printf("%d ", c.matriz[i][j]);
         }
         printf("\n");
     }
