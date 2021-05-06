@@ -26,7 +26,7 @@ Campo montaCampo(int lin, int col)
         }
     }
 
-    c.jogando = create_queue();
+    c.inundado = create_queue();
     return c;
 }
 

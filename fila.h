@@ -22,6 +22,8 @@ int front (Queue *q);
 
 int empty_queue (Queue *q);
 
+int verificaNode(Queue *q, int x, int y);
+
 
 
 #endif // FILA_H_INCLUDED

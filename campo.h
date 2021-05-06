@@ -11,8 +11,8 @@ typedef struct
     int lin;
     int col;
 
-    Queue* jogando;
-    //Queue* vizinhos;
+    Queue* inundado;
+    Queue* vizinhos;
 }Campo;
 
 Campo montaCampo(int lin, int col);

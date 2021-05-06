@@ -67,15 +67,6 @@ Queue* dequeue (Queue *q) {
    return q;
 }
 
-/*Função para retornar o primeiro elemento da fila (cabeça da lista encadeada) sem desenfileirar!*/
-int front (Queue *q) {
-
-   if (!empty_queue(q))
-    return q->info;
-
-   else
-    return 0;
-}
 
 /*Função para testar se uma fila está vazia!*/
 int empty_queue (Queue *q) {
@@ -87,5 +78,15 @@ int empty_queue (Queue *q) {
 
     else
         return 0;
+}
+
+int verificaNode(Queue *q, int x, int y)
+{
+    for(Queue *i = q; i != NULL; i = i->next)
+    {
+        if(i->x == x && i->y == y)
+            return 0;
+    }
+    return 1;
 }
 
