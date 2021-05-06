@@ -27,6 +27,7 @@ Campo montaCampo(int lin, int col)
     }
 
     c.inundado = create_queue();
+    c.vizinhos = criar();
     return c;
 }
 

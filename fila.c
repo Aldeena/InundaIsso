@@ -40,7 +40,7 @@ Queue* enqueue (Queue *q, int X, int Y) {
 
         aux = q;
 
-        while (aux != NULL && aux->next != NULL) {
+        while (aux->next != NULL) {
             aux = aux->next;
         }
 

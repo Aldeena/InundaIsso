@@ -1,5 +1,4 @@
 #include "campo.h"
-#include "fila.h"
 
 void trocaElemento(Campo c, int x, int y, int elem)
 {
@@ -38,13 +37,13 @@ int melhorCandidato(Campo c)
         if((i->x < c.lin && i->y < c.col) && (i->x >= 0 && i->y >= 0))
         {
             if(c.matriz[i->x+1][i->y] != elemInundado)
-                c.vizinhos = enqueue(c.vizinhos, i->x+1, i->y);
+                c.vizinhos = inserir(c.vizinhos, i->x+1, i->y);
             if(c.matriz[i->x-1][i->y] != elemInundado)
-                c.vizinhos = enqueue(c.vizinhos, i->x-1, i->y);
+                c.vizinhos = inserir(c.vizinhos, i->x-1, i->y);
             if(c.matriz[i->x][i->y+1] != elemInundado)
-                c.vizinhos = enqueue(c.vizinhos, i->x, i->y+1);
+                c.vizinhos = inserir(c.vizinhos, i->x, i->y+1);
             if(c.matriz[i->x][i->y-1] != elemInundado)
-                c.vizinhos = enqueue(c.vizinhos, i->x, i->y-1);
+                c.vizinhos = inserir(c.vizinhos, i->x, i->y-1);
         }
     }
     for(int i = 0; i < c.lin; i++)
@@ -55,8 +54,8 @@ int melhorCandidato(Campo c)
                 c.inundado = enqueue(c.inundado, i, j);
         }
     }
-    int vetor[5] = {0};
-    for(Queue *i = c.vizinhos; i != NULL; i = i->next)
+    int vetor[6] = {-1};
+    for(Lista *i = c.vizinhos; i != NULL; i = i->next)
     {
         if(c.matriz[i->x][i->y] == 0)
             vetor[0]++;
@@ -68,12 +67,12 @@ int melhorCandidato(Campo c)
             vetor[3]++;
         else if(c.matriz[i->x][i->y] == 4)
             vetor[4]++;
-        else
+        else if(c.matriz[i->x][i->y] == 5)
             vetor[5]++;
     }
     int aux = 0;
     int indice = 0;
-    for(int i = 0; i < 5; i++)
+    for(int i = 0; i <= 5; i++)
     {
         if(vetor[i] > aux)
         {
@@ -81,6 +80,7 @@ int melhorCandidato(Campo c)
             indice = i;
         }
     }
+    printf("Candidato %d\n", indice);
     return indice;
     /* A ideia seria comparar o elemento, olhando através dos índices que seriam armazenados dentro da fila,
        daí existiria um contador que veria qual o que mais se repete, e uma variável que armazenaria qual o elemento que mais se repete,
@@ -98,11 +98,13 @@ void resolveJogo(Campo c, int passos)
 
     while(passos < 11)
     {
+        printf("Passo %d\n", passos);
         //printf("Passo %d insira o numero que quer trocar: ", passos+1);
         //scanf("%d", &elem);
         trocaElemento(c, x, y, melhorCandidato(c));
         imprimeCampo(c);
         printf("\n\n");
+        verificaJogo(c);
         passos++;
     }
 
@@ -130,8 +132,8 @@ int main()
     int lin = 7;
     int col = 7;
     Campo c = montaCampo(lin, col);
-    if(jogar(c, 10))
-        printf("Se Fodeu!\n");
+    if(jogar(c, 1))
+        printf("Perdeu!\n");
     else
         printf("Ganhou!!\n");
     return 0;

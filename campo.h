@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "fila.h"
+#include "lista.h"
 
 typedef struct
 {
@@ -12,7 +13,7 @@ typedef struct
     int col;
 
     Queue* inundado;
-    Queue* vizinhos;
+    Lista* vizinhos;
 }Campo;
 
 Campo montaCampo(int lin, int col);
