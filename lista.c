@@ -52,7 +52,7 @@ void liberar (Lista *l) {
   }
 }
 
-int verificaNodeL(Lista *l, int x, int y)
+int verificaNodeL(Lista *l, int x, int y) //Aqui evitamos elementos repetidos na lista, da mesma forma que evitamos na fila
 {
     for(Lista *i = l; i != NULL; i = i->next)
     {

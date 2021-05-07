@@ -1,9 +1,9 @@
 #include "campo.h"
 
-void trocaElemento(Campo c, int x, int y, int elem)
+void trocaElemento(Campo c, int x, int y, int elem) //Função responsável pela inundação nos elementos
 {
     int aux = c.matriz[x][y];
-    if((x < c.lin && y < c.col) && (x >= 0 && y >= 0))
+    if((x < c.lin && y < c.col) && (x >= 0 && y >= 0)) //Condição de parada da rescursividade
     {
         c.matriz[x][y] = elem;
         if(c.matriz[x+1][y] == aux)
@@ -16,7 +16,7 @@ void trocaElemento(Campo c, int x, int y, int elem)
             trocaElemento(c, x, y-1, elem);
     }
 }
-int verificaJogo(Campo c)
+int verificaJogo(Campo c) //Aqui verificamos se o jogo foi vencido ou não
 {
     int elem = c.matriz[1][1];
     for(int i = 1; i < c.lin-1; i++)
@@ -29,7 +29,7 @@ int verificaJogo(Campo c)
     }
     return 0;
 }
-void verificaVizinho(Campo* c, int x, int y)
+void verificaVizinho(Campo* c, int x, int y) //Nessa função, procuramos saber os vizinhos dos vizinhos
 {
     if((x < c->lin-1 && y < c->col-1) && (x > 0 && y > 0))
     {
@@ -37,7 +37,7 @@ void verificaVizinho(Campo* c, int x, int y)
         if(verificaNodeL(c->vizinhos, x, y))
             c->vizinhos = inserir(c->vizinhos, x, y);
 
-        if(c->matriz[x+1][y] == aux)
+        if(c->matriz[x+1][y] == aux) //Verificação a direita e embaixo apenas, pois a esquerda e acima, já é feita pela função melhorCandidato
         {
             verificaVizinho(c, x+1, y);
         }
@@ -50,15 +50,15 @@ void verificaVizinho(Campo* c, int x, int y)
 int melhorCandidato(Campo c)
 {
     int elemInundado = c.matriz[1][1];
-    for(Queue *i = c.inundado; i != NULL; i = i->next)
+    for(Queue *i = c.inundado; i != NULL; i = i->next) //Aqui procuramos sempre alcançar os elementos inundados mais externos, ou seja, que possuem elementos diferentes do último melhor elemento
     {
         if((i->x < c.lin && i->y < c.col) && (i->x >= 0 && i->y >= 0))
         {
-            if(c.matriz[i->x+1][i->y] != elemInundado)
-                verificaVizinho(&c, i->x+1, i->y);
+            if(c.matriz[i->x+1][i->y] != elemInundado) //Se ele não for inundado, chamamos a verifica vizinho para ver se ele possui elementos iguais
+                verificaVizinho(&c, i->x+1, i->y);     //em suas proximidades
 
-            else if (verificaNodeQ(c.inundado, i->x+1, i->y))
-                c.inundado = enqueue(c.inundado, i->x+1, i->y);
+            else if (verificaNodeQ(c.inundado, i->x+1, i->y))   //Se ele for igual ao elemento de inundação, então ele não precisa ser verificado
+                c.inundado = enqueue(c.inundado, i->x+1, i->y); //é incluído diretamente na fila de inundados
 
             if(c.matriz[i->x-1][i->y] != elemInundado)
                 verificaVizinho(&c, i->x-1, i->y);
@@ -79,9 +79,9 @@ int melhorCandidato(Campo c)
                 c.inundado = enqueue(c.inundado, i->x, i->y-1);
         }
     }
-    int vetor[6] = {-1};
+    int vetor[8] = {-1}; //Vetor de contador
     Lista *i = c.vizinhos;
-    while(i != NULL)
+    while(i != NULL) //Aqui verificamos quantas vezes o mesmo elemento se repetiu na lista de vizinhos
     {
         if(c.matriz[i->x][i->y] == 0)
             vetor[0]++;
@@ -95,14 +95,18 @@ int melhorCandidato(Campo c)
             vetor[4]++;
         else if(c.matriz[i->x][i->y] == 5)
             vetor[5]++;
-        i = remover(i, i->x, i->y);
+        else if(c.matriz[i->x][i->y] == 6)
+            vetor[6]++;
+        else if(c.matriz[i->x][i->y] == 7)
+            vetor[7]++;
+        i = remover(i, i->x, i->y); //função remover da lista já  faz com que passe para próximo node da lista
     }
 
     int aux = -1;
     int indice = -1;
-    for(int i = 0; i <= 5; i++)
+    for(int i = 0; i <= 7; i++)
     {
-        if(vetor[i] > aux)
+        if(vetor[i] > aux) //Priorizamos aquele que verificado antes, ou seja, do menor elemento, para o maior
         {
             aux = vetor[i];
             indice = i;
@@ -110,28 +114,20 @@ int melhorCandidato(Campo c)
     }
     printf("Candidato %d\n", indice);
     return indice;
-    /* A ideia seria comparar o elemento, olhando atrav�s dos �ndices que seriam armazenados dentro da fila,
-       da� existiria um contador que veria qual o que mais se repete, e uma vari�vel que armazenaria qual o elemento que mais se repete,
-       ent�o seria retornado esse elemento. O problema fica em ver o vizinho do vizinho, porque a escolha ideal n�o � s� o que mais se repete ao redor
-       dos preenchidos, e sim o que mais se estende num contexto geral, ou seja, prevendo o que vai ser preenchido atrav�s dessa escolha.
-
-       Talvez a solu��o seria criar duas filas, uma com os elementos preenchidos, e outra, j� cheia, com os elementos a serem preenchidos ainda.
-       E essa compara��o se daria atrav�s da fila dos elementos que ainda precisam preencher. Mas eu ainda n�o consegui pensar num algoritmo bom
-       o suficiente para executar essa ideia.*/
 }
 void resolveJogo(Campo c, int passos)
 {
     int x = 1, y = 1;
     c.inundado = enqueue(c.inundado, x, y);
 
-    while(passos < 14)
+    while(passos < 64) //Primeira condição para ganhar o jogo
     {
         printf("Passo %d\n", passos);
         trocaElemento(c, x, y, melhorCandidato(c));
         imprimeCampo(c);
         printf("\n\n");
 
-        if(!verificaJogo(c))
+        if(!verificaJogo(c)) //Se ele venceu, o laço se quebra, voltando para a função jogar
             break;
 
         else
@@ -142,7 +138,7 @@ void resolveJogo(Campo c, int passos)
 int jogar(Campo c, int passos)
 {
     imprimeCampo(c);
-    resolveJogo(c, passos);
+    resolveJogo(c, passos); //Resolução autônoma do jogo
     /*int elem = 0;
     int x = 1, y = 1;
     while(passos < 11)
@@ -157,13 +153,13 @@ int jogar(Campo c, int passos)
         printf("\n\n");
         passos++;
     }*/
-    return verificaJogo(c);
+    return verificaJogo(c); //Venceu ou não o jogo
 }
 
 int main()
 {
-    int lin = 8;
-    int col = 8;
+    int lin = 28; // Linha e Coluna possuem dois valores de sacrifício, um que servia como índice para ajudar no direcionamento do usuário no jogo base
+    int col = 28; // Enquanto a outra ajudava a evitar que fossem acessadas, posições indevidas de memória.
     Campo c = montaCampo(lin, col);
     if(jogar(c, 1))
         printf("Perdeu!\n");

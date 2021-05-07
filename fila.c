@@ -80,7 +80,7 @@ int empty_queue (Queue *q) {
         return 0;
 }
 
-int verificaNodeQ(Queue *q, int x, int y)
+int verificaNodeQ(Queue *q, int x, int y) //Essa função serve para que a fila não possua elementos repetidos
 {
     for(Queue *i = q; i != NULL; i = i->next)
     {
