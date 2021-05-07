@@ -40,9 +40,9 @@ void imprimeCampo(Campo c)
             if(j == c.col-1 || i == c.lin-1)
                 printf(" ");
             else if(i == 0)
-                printf("%d ", j);
+                printf(" ");
             else if(j == 0)
-                printf("%d ", i);
+                printf(" ");
             else
                 printf("%d ", c.matriz[i][j]);
         }

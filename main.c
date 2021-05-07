@@ -29,6 +29,31 @@ int verificaJogo(Campo c)
     }
     return 0;
 }
+void verificaVizinho(Campo c, int x, int y)
+{
+    int aux = c.matriz[x][y];
+    if((x < c.lin && y < c.col) && (x > 0 && y > 0))
+    {
+        c.vizinhos = inserir(c.vizinhos, x, y);
+
+        if(c.matriz[x+1][y] == aux)
+        {
+            verificaVizinho(c, x+1, y);
+        }
+        //if(c.matriz[x-1][y] == aux)
+        //{
+        //    verificaVizinho(c, x-1, y);
+        //}
+        if(c.matriz[x][y+1] == aux)
+        {
+            verificaVizinho(c, x, y+1);
+        }
+        //if(c.matriz[x][y-1] == aux)
+        //{
+        //    verificaVizinho(c, x, y-1);
+        //}
+    }
+}
 int melhorCandidato(Campo c)
 {
     int elemInundado = c.matriz[1][1];
@@ -37,23 +62,38 @@ int melhorCandidato(Campo c)
         if((i->x < c.lin && i->y < c.col) && (i->x >= 0 && i->y >= 0))
         {
             if(c.matriz[i->x+1][i->y] != elemInundado)
-                c.vizinhos = inserir(c.vizinhos, i->x+1, i->y);
+                verificaVizinho(c, i->x+1, i->y);
+
+            else if (verificaNode(c.inundado, i->x+1, i->y))
+                c.inundado = enqueue(c.inundado, i->x+1, i->y);
+
             if(c.matriz[i->x-1][i->y] != elemInundado)
-                c.vizinhos = inserir(c.vizinhos, i->x-1, i->y);
+                verificaVizinho(c, i->x-1, i->y);
+
+            else if (verificaNode(c.inundado, i->x-1, i->y))
+                c.inundado = enqueue(c.inundado, i->x-1, i->y);
+
             if(c.matriz[i->x][i->y+1] != elemInundado)
-                c.vizinhos = inserir(c.vizinhos, i->x, i->y+1);
+                verificaVizinho(c, i->x, i->y+1);
+
+            else if (verificaNode(c.inundado, i->x, i->y+1))
+                c.inundado = enqueue(c.inundado, i->x, i->y+1);
+
             if(c.matriz[i->x][i->y-1] != elemInundado)
-                c.vizinhos = inserir(c.vizinhos, i->x, i->y-1);
+                verificaVizinho(c, i->x, i->y-1);
+
+            else if (verificaNode(c.inundado, i->x, i->y-1))
+                c.inundado = enqueue(c.inundado, i->x, i->y-1);
         }
     }
-    for(int i = 0; i < c.lin; i++)
+/*    for(int i = 0; i < c.lin; i++)
     {
         for(int j = 0; j < c.col; j++)
         {
             if(c.matriz[i][j] == elemInundado && verificaNode(c.inundado, i, j))
                 c.inundado = enqueue(c.inundado, i, j);
         }
-    }
+    }*/
     int vetor[6] = {-1};
     for(Lista *i = c.vizinhos; i != NULL; i = i->next)
     {
@@ -70,8 +110,8 @@ int melhorCandidato(Campo c)
         else if(c.matriz[i->x][i->y] == 5)
             vetor[5]++;
     }
-    int aux = 0;
-    int indice = 0;
+    int aux = -1;
+    int indice = -1;
     for(int i = 0; i <= 5; i++)
     {
         if(vetor[i] > aux)
@@ -104,8 +144,12 @@ void resolveJogo(Campo c, int passos)
         trocaElemento(c, x, y, melhorCandidato(c));
         imprimeCampo(c);
         printf("\n\n");
-        verificaJogo(c);
-        passos++;
+
+        if(!verificaJogo(c))
+            break;
+
+        else
+            passos++;
     }
 
 }
@@ -129,8 +173,8 @@ int jogar(Campo c, int passos)
 
 int main()
 {
-    int lin = 7;
-    int col = 7;
+    int lin = 8;
+    int col = 8;
     Campo c = montaCampo(lin, col);
     if(jogar(c, 1))
         printf("Perdeu!\n");
