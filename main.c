@@ -29,29 +29,22 @@ int verificaJogo(Campo c)
     }
     return 0;
 }
-void verificaVizinho(Campo c, int x, int y)
+void verificaVizinho(Campo* c, int x, int y)
 {
-    int aux = c.matriz[x][y];
-    if((x < c.lin && y < c.col) && (x > 0 && y > 0))
+    if((x < c->lin-1 && y < c->col-1) && (x > 0 && y > 0))
     {
-        c.vizinhos = inserir(c.vizinhos, x, y);
+        int aux = c->matriz[x][y];
+        if(verificaNodeL(c->vizinhos, x, y))
+            c->vizinhos = inserir(c->vizinhos, x, y);
 
-        if(c.matriz[x+1][y] == aux)
+        if(c->matriz[x+1][y] == aux)
         {
             verificaVizinho(c, x+1, y);
         }
-        //if(c.matriz[x-1][y] == aux)
-        //{
-        //    verificaVizinho(c, x-1, y);
-        //}
-        if(c.matriz[x][y+1] == aux)
+        if(c->matriz[x][y+1] == aux)
         {
             verificaVizinho(c, x, y+1);
         }
-        //if(c.matriz[x][y-1] == aux)
-        //{
-        //    verificaVizinho(c, x, y-1);
-        //}
     }
 }
 int melhorCandidato(Campo c)
@@ -62,40 +55,33 @@ int melhorCandidato(Campo c)
         if((i->x < c.lin && i->y < c.col) && (i->x >= 0 && i->y >= 0))
         {
             if(c.matriz[i->x+1][i->y] != elemInundado)
-                verificaVizinho(c, i->x+1, i->y);
+                verificaVizinho(&c, i->x+1, i->y);
 
-            else if (verificaNode(c.inundado, i->x+1, i->y))
+            else if (verificaNodeQ(c.inundado, i->x+1, i->y))
                 c.inundado = enqueue(c.inundado, i->x+1, i->y);
 
             if(c.matriz[i->x-1][i->y] != elemInundado)
-                verificaVizinho(c, i->x-1, i->y);
+                verificaVizinho(&c, i->x-1, i->y);
 
-            else if (verificaNode(c.inundado, i->x-1, i->y))
+            else if (verificaNodeQ(c.inundado, i->x-1, i->y))
                 c.inundado = enqueue(c.inundado, i->x-1, i->y);
 
             if(c.matriz[i->x][i->y+1] != elemInundado)
-                verificaVizinho(c, i->x, i->y+1);
+                verificaVizinho(&c, i->x, i->y+1);
 
-            else if (verificaNode(c.inundado, i->x, i->y+1))
+            else if (verificaNodeQ(c.inundado, i->x, i->y+1))
                 c.inundado = enqueue(c.inundado, i->x, i->y+1);
 
             if(c.matriz[i->x][i->y-1] != elemInundado)
-                verificaVizinho(c, i->x, i->y-1);
+                verificaVizinho(&c, i->x, i->y-1);
 
-            else if (verificaNode(c.inundado, i->x, i->y-1))
+            else if (verificaNodeQ(c.inundado, i->x, i->y-1))
                 c.inundado = enqueue(c.inundado, i->x, i->y-1);
         }
     }
-/*    for(int i = 0; i < c.lin; i++)
-    {
-        for(int j = 0; j < c.col; j++)
-        {
-            if(c.matriz[i][j] == elemInundado && verificaNode(c.inundado, i, j))
-                c.inundado = enqueue(c.inundado, i, j);
-        }
-    }*/
     int vetor[6] = {-1};
-    for(Lista *i = c.vizinhos; i != NULL; i = i->next)
+    Lista *i = c.vizinhos;
+    while(i != NULL)
     {
         if(c.matriz[i->x][i->y] == 0)
             vetor[0]++;
@@ -109,7 +95,9 @@ int melhorCandidato(Campo c)
             vetor[4]++;
         else if(c.matriz[i->x][i->y] == 5)
             vetor[5]++;
+        i = remover(i, i->x, i->y);
     }
+
     int aux = -1;
     int indice = -1;
     for(int i = 0; i <= 5; i++)
@@ -136,11 +124,9 @@ void resolveJogo(Campo c, int passos)
     int x = 1, y = 1;
     c.inundado = enqueue(c.inundado, x, y);
 
-    while(passos < 11)
+    while(passos < 14)
     {
         printf("Passo %d\n", passos);
-        //printf("Passo %d insira o numero que quer trocar: ", passos+1);
-        //scanf("%d", &elem);
         trocaElemento(c, x, y, melhorCandidato(c));
         imprimeCampo(c);
         printf("\n\n");
@@ -157,13 +143,16 @@ int jogar(Campo c, int passos)
 {
     imprimeCampo(c);
     resolveJogo(c, passos);
-/*    while(passos < 11)
+    /*int elem = 0;
+    int x = 1, y = 1;
+    while(passos < 11)
     {
-        if(!verificaJogo(c, 7))
+        if(!verificaJogo(c))
             return 0;
         printf("Passo %d insira o numero que quer trocar: ", passos+1);
         scanf("%d", &elem);
-        resolveJogo(c)
+        trocaElemento(c, x, y, elem);
+        //resolveJogo(c)
         imprimeCampo(c);
         printf("\n\n");
         passos++;

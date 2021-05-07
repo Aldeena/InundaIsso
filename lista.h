@@ -17,3 +17,5 @@ Lista *remover (Lista *l, int X, int Y);
 
 void liberar (Lista *l);
 
+int verificaNodeL(Lista *l, int x, int y);
+

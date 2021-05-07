@@ -1,0 +1,29 @@
+# depslib dependency file v1.0
+1620355077 source:c:\users\leonardo fischer\desktop\utfpr\ed1\listas\trablaho\floodit\campo.c
+	"campo.h"
+	"fila.h"
+
+1620345867 c:\users\leonardo fischer\desktop\utfpr\ed1\listas\trablaho\floodit\campo.h
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"fila.h"
+	"lista.h"
+
+1620356751 source:c:\users\leonardo fischer\desktop\utfpr\ed1\listas\trablaho\floodit\main.c
+	"campo.h"
+
+1620348805 source:c:\users\leonardo fischer\desktop\utfpr\ed1\listas\trablaho\floodit\lista.c
+	"lista.h"
+
+1620348797 c:\users\leonardo fischer\desktop\utfpr\ed1\listas\trablaho\floodit\lista.h
+	<stdio.h>
+	<stdlib.h>
+
+1620348797 c:\users\leonardo fischer\desktop\utfpr\ed1\listas\trablaho\floodit\fila.h
+	<stdio.h>
+	<stdlib.h>
+
+1620348797 source:c:\users\leonardo fischer\desktop\utfpr\ed1\listas\trablaho\floodit\fila.c
+	"fila.h"
+

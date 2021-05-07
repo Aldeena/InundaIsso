@@ -22,7 +22,7 @@ int front (Queue *q);
 
 int empty_queue (Queue *q);
 
-int verificaNode(Queue *q, int x, int y);
+int verificaNodeQ(Queue *q, int x, int y);
 
 
 

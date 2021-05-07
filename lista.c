@@ -51,3 +51,13 @@ void liberar (Lista *l) {
     l = aux;
   }
 }
+
+int verificaNodeL(Lista *l, int x, int y)
+{
+    for(Lista *i = l; i != NULL; i = i->next)
+    {
+        if(i->x == x && i->y == y)
+            return 0;
+    }
+    return 1;
+}

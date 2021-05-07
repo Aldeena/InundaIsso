@@ -80,7 +80,7 @@ int empty_queue (Queue *q) {
         return 0;
 }
 
-int verificaNode(Queue *q, int x, int y)
+int verificaNodeQ(Queue *q, int x, int y)
 {
     for(Queue *i = q; i != NULL; i = i->next)
     {
